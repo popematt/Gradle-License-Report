@@ -24,9 +24,12 @@ import com.github.jk1.license.ProjectData
 
 class InventoryMarkdownReportRenderer extends InventoryReportRenderer {
 
-    InventoryMarkdownReportRenderer(String fileName = 'licenses.md', String name = null, File overridesFilename = null) {
+    boolean includeDate
+
+    InventoryMarkdownReportRenderer(String fileName = 'licenses.md', String name = null, File overridesFilename = null, boolean includeDate = true) {
         this.name = name
         this.fileName = fileName
+        this.includeDate = includeDate
         if (overridesFilename) overrides = parseOverrides(overridesFilename)
     }
 
@@ -47,8 +50,9 @@ class InventoryMarkdownReportRenderer extends InventoryReportRenderer {
         output << "\n"
         output << "# ${name}\n"
         output << "## Dependency License Report\n"
-        output << "_${new Date().format('yyyy-MM-dd HH:mm:ss z')}_\n"
-
+        if (includeDate) {
+            output << "_${new Date().format('yyyy-MM-dd HH:mm:ss z')}_\n"
+        }
         inventory.keySet().sort().each { String license ->
             output << "## ${license}\n\n"
             inventory[license].sort({ ModuleData a, ModuleData b -> a.group <=> b.group }).each { ModuleData data ->

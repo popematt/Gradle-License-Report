@@ -33,9 +33,11 @@ class TextReportRenderer implements ReportRenderer{
     private File output
     private int counter
     private String fileName
+    private boolean includeDate
 
-    TextReportRenderer(String filename = 'THIRD-PARTY-NOTICES.txt') {
+    TextReportRenderer(String filename = 'THIRD-PARTY-NOTICES.txt', boolean includeDate = true) {
         this.fileName = filename
+        this.includeDate = includeDate
     }
 
     @Input
@@ -50,10 +52,12 @@ Dependency License Report for $project.name ${if (!'unspecified'.equals(project.
 
 """
         printDependencies(data)
-        output << """
+        if (includeDate) {
+            output << """
 This report was generated at ${new Date()}.
 
 """
+        }
     }
 
     private void printDependencies(ProjectData data) {
